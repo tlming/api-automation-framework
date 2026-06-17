@@ -1,3 +1,7 @@
+# 测试报告与日志（本地生成，无需上传）
+logs/
+reports/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
