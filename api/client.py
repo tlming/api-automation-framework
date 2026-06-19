@@ -38,4 +38,4 @@ class ApiClient:
             return resp
         except requests.exceptions.RequestException as e:
             logger.error(f"请求出错: {e}")  # 打日志
-            return None  # 失败时返回空
+            raise  # 重新抛出异常，让调用者处理

@@ -30,8 +30,21 @@ def test_create_post(api_post):
     assert result["title"] == "my first testPost"
     assert result["body"] == "hahahahaha"
 
-# def test_update_post(api_post):
-#     '''
-#     修改接口全部信息
-#     '''
-#     result = api_post.put(1)
+
+def test_update_post(api_post):
+    '''
+    修改接口全部信息
+    '''
+    result = api_post.update(post_id=1,user_id= 2,title="updated post", body= "zezezeeze")
+    assert result["id"] == 1
+    assert result["userId"] == 2
+    assert result["title"] == "updated post"
+
+
+def test_delete_post(api_post):
+    '''
+    删除接口信息
+    DELETE /posts/{id}
+    '''
+    result = api_post.delete(post_id=1)
+    assert result == {}
