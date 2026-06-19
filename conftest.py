@@ -1,5 +1,5 @@
 import pytest
-from api import ApiClient,PostsAPI
+from api import ApiClient, PostsAPI, TodoAPI, UserAPI
 from utils import config, setup_logger
 
 
@@ -14,7 +14,20 @@ def api_client():
         timeout=config.timeout,
     )
 
+
 @pytest.fixture()
 def api_post(api_client):
     # 每一个测试都使用一个PostsAPI
     return PostsAPI(api_client)
+
+
+@pytest.fixture()
+def api_todo(api_client):
+    # 每一个测试都使用一个TodoAPI
+    return TodoAPI(api_client)
+
+
+@pytest.fixture()
+def api_user(api_client):
+    # 每一个测试都使用一个UserAPI
+    return UserAPI(api_client)
