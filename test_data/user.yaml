@@ -1,0 +1,43 @@
+user_id:
+  - casename: "查询数据正常"
+    payload:
+      user_id: 1
+    expected_status: 200
+  - casename: "查询数据404_1"
+    payload:
+      user_id: 99
+    expected_status: 404
+  - casename: "查询数据404_2"
+    payload:
+      user_id: -1
+    expected_status: 404
+  - casename: "查询数据404_3"
+    payload:
+      user_id: "abc"
+    expected_status: 404
+  - casename: "查询数据404_4"
+    payload:
+      user_id: "测试"
+    expected_status: 404
+
+create:
+  - casename: "成功创建user"
+    payload:
+      name: "cs_name"
+      username: "cs_username"
+      email: "cs@ceshi.com"
+      address:
+        street: "cs_street"
+        suite: "cs_suite"
+        city: "cs_city"
+        zipcode: "cs_zip"
+        geo:
+          lat: "cs_lat"
+          lng: "cs_lng"
+      phone: "1-222-333-2222"
+      website: "cs_web"
+      company:
+        name: "cs_com_name"
+        catchPhrase: "cs_com_cat"
+        bs: "cs_com_bs"
+    expected_status: 201
