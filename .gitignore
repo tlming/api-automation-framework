@@ -2,6 +2,8 @@
 logs/
 reports/
 
+#claude (claude code产物，无需上传)
+.claude
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
