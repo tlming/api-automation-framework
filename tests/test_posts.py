@@ -7,7 +7,7 @@ def test_get_all_posts(api_post):
     '''
     resp = api_post.post_list()
     assert resp.status_code == 200
-    data = resp.json()
+    data = resp.data
     assert isinstance(data, list)
     assert len(data) == 100
     assert all("userId" in p and "id" in p and "title" in p and "body" in p for p in data)
@@ -19,7 +19,7 @@ def test_get_post_by_id(api_post):
     '''
     resp = api_post.get_by_id(1)
     assert resp.status_code == 200
-    data = resp.json()
+    data = resp.data
     assert isinstance(data, dict)
     assert data["id"] == 1
     assert "title" in data
@@ -39,7 +39,7 @@ def test_create_post(api_post):
     '''
     resp = api_post.create(user_id=1, title="my first testPost", body="hahahahaha")
     assert resp.status_code == 201
-    data = resp.json()
+    data = resp.data
     assert data["userId"] == 1
     assert data["title"] == "my first testPost"
     assert data["body"] == "hahahahaha"
@@ -48,6 +48,7 @@ def test_creat_long_post(api_post):
     '''
     创建接口时，字符串超长情况
     '''
+    #mock接口，怎么都会成功
     pass
 
 
@@ -56,7 +57,7 @@ def test_update_post(api_post):
     '''
     修改接口全部信息
     '''
-    data = api_post.update(post_id=1, user_id=2, title="updated post", body="zezezeeze").json()
+    data = api_post.update(post_id=1, user_id=2, title="updated post", body="zezezeeze").data
     assert data["id"] == 1
     assert data["userId"] == 2
     assert data["title"] == "updated post"
@@ -75,7 +76,7 @@ def test_patch_post(api_post):
     '''
     修改接口部分信息
     '''
-    data = api_post.patch(post_id=1, json={"userId": 3, "title": "pathc post", "body": "patch patch"}).json()
+    data = api_post.patch(post_id=1, json={"userId": 3, "title": "pathc post", "body": "patch patch"}).data
     assert data["userId"] == 3
     assert data["title"] == "pathc post"
     assert data["body"] == "patch patch"
@@ -87,4 +88,4 @@ def test_delete_post(api_post):
     DELETE /posts/{id}
     '''
     resp = api_post.delete(post_id=1)
-    assert resp.json() == {}
+    assert resp.data == {}
