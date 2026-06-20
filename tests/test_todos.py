@@ -40,7 +40,7 @@ def test_get_todo_by_id(api_todo, case):
     resp = api_todo.get_todo_by_id(case)
     data = resp.data
     assert isinstance(data, dict)
-    assert isinstance(data['completed'], bool) if data['completed'] else True
+    assert isinstance(data['completed'], bool) if data else True
 
 
 @pytest.mark.parametrize('case', CREATE_TODO_DATA, ids=[ct['casename'] for ct in CREATE_TODO_DATA])
