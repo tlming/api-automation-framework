@@ -2,15 +2,42 @@ import logging
 
 import requests
 
+from api.auth.authenticator import Authenticator
+from api.auth.token_manager import TokenManager
+
 logger = logging.getLogger('__name__')
 
 
 class ApiClient:
 
-    def __init__(self, base_url, timeout) -> None:
+    def __init__(self, base_url, timeout, token_manager: TokenManager) -> None:
         self.base_url = base_url
         self.session = requests.Session()
         self.timeout = timeout
+        # 给session绑定认证器，可用于发送请求前进行拦截，然后进行加密加签，加token
+        self.authenticator = Authenticator(token_manager)
+        self.session.auth = self.authenticator
+
+    def without_sign(self):
+        '''
+        关闭加签
+        '''
+        self.authenticator._need_sign = False
+        return self
+
+    def without_encrypt(self):
+        '''
+        关闭加密
+        '''
+        self.authenticator._need_encrypt = False
+        return self
+
+    def without_token(self):
+        '''
+        关闭token
+        '''
+        self.authenticator._need_token = False
+        return self
 
     def get(self, path: str, params: dict = None, **kwargs):
         return self._request(method='GET', path=path, params=params, **kwargs)
