@@ -5,7 +5,6 @@ from api.response import APIResponse
 class PostsAPI(BaseAPI):
     """/posts 接口的业务封装。"""
 
-
     def post_list(self) -> APIResponse:
         """GET /posts —— 列出所有 posts。"""
         return self._get(path="/posts")
@@ -32,20 +31,20 @@ class PostsAPI(BaseAPI):
         '''
         POST/posts —— 创建post接口
         '''
-        return self._post(path=f"/posts",json={"userId": user_id, "title": title, "body": body})
+        return self._post(path=f"/posts", json={"userId": user_id, "title": title, "body": body})
 
     def update(self, post_id: int, user_id: int, title: str, body: str) -> APIResponse:
         '''
         PUT/posts/{id} ——更新接口全部信息
         '''
 
-        return self._put(path=f'/posts/{post_id}',json={"userId": user_id, "title": title, "body": body})
+        return self._put(path=f'/posts/{post_id}', json={"userId": user_id, "title": title, "body": body})
 
     def patch(self, post_id: int, **kwargs) -> APIResponse:
         '''
         PATCH /posts/{id}  ——更新接口部分信息
         '''
-        return self._patch(path=f"/posts/{post_id}",**kwargs)
+        return self._patch(path=f"/posts/{post_id}", **kwargs)
 
     def delete(self, post_id: int) -> APIResponse:
         '''
