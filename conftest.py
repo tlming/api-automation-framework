@@ -1,8 +1,29 @@
 import pytest
 from api import ApiClient, PostsAPI, TodoAPI, UserAPI
+from api.auth import TokenManager
 from utils import config, setup_logger,is_running_in_jenkins,send_serverchan_message
+
+
 @pytest.fixture(scope='session')
-def api_client():
+def token_manager():
+    """
+    整个测试会话只创建一次 TokenManager。
+    它内部会：
+    1. 首次调用时自动登录获取 Token。
+    2. 后续每次 get_token() 时自动判断是否过期，如果过期则刷新。
+    3. 使用线程锁防止并发刷新（即使你并行跑用例也安全）。
+    """
+
+    tm = TokenManager(
+        login_url=config.login_url,
+        username=config.username,
+        password=config.password,
+        token_buffer_seconds=config.token_buffer_seconds
+    )
+    return tm
+
+@pytest.fixture(scope='session')
+def api_client(token_manager):
     """Session 范围的 APIClient，整个测试会话只创建一次。"""
     # 加载配置logging
     setup_logger()
@@ -10,6 +31,7 @@ def api_client():
     return ApiClient(
         base_url=config.base_url,
         timeout=config.timeout,
+        token_manager=token_manager,
     )
 
 
