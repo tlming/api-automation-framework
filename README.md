@@ -1,13 +1,13 @@
 # api-automation-framework
 
-JSONPlaceholder API 自动化测试框架。基于 pytest + requests + allure-pytest + GitHub Actions。
+JSONPlaceholder API 自动化测试框架。基于 pytest + requests + allure + Jenkins。
 
 ## 技术栈
 
 - pytest —— Python 测试框架
 - requests —— HTTP 客户端
-- allure-pytest —— 测试报告
-- GitHub Actions —— CI/CD
+- allure —— 测试报告
+- Jenkins —— CI/CD
 
 ## 快速开始
 
