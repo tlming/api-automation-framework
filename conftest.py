@@ -5,22 +5,34 @@ from utils import config, setup_logger,is_running_in_jenkins,send_serverchan_mes
 
 
 @pytest.fixture(scope='session')
-def token_manager():
-    """
-    整个测试会话只创建一次 TokenManager。
-    它内部会：
-    1. 首次调用时自动登录获取 Token。
-    2. 后续每次 get_token() 时自动判断是否过期，如果过期则刷新。
-    3. 使用线程锁防止并发刷新（即使你并行跑用例也安全）。
-    """
+def token_manager(tmp_path_factory,worker_id):
+    '''
+    跨进程安全的TokenManager
 
-    tm = TokenManager(
-        login_url=config.login_url,
-        username=config.username,
-        password=config.password,
-        token_buffer_seconds=config.token_buffer_seconds
-    )
-    return tm
+    工作原理：
+    1、单进程时不考虑文件锁，使用内存锁，直接将token放进内存中
+    2、多进程模式使用文件锁
+        - 所有的worker共享的一个json文件
+        - 使用filelock确定一次只能有一个进程访问文件
+        -
+    '''
+
+    #单进程模式直接返回TokenManager
+    if worker_id =='master':
+        return TokenManager(
+            login_url=config.login_url,
+            username=config.username,
+            password=config.password,
+            token_buffer_seconds=config.token_buffer_seconds
+        )
+    shared_token_file=tmp_path_factory.getbasetemp().parent / 'shared_token.json'
+    return TokenManager(
+            login_url=config.login_url,
+            username=config.username,
+            password=config.password,
+            token_buffer_seconds=config.token_buffer_seconds,
+            shared_token_file=shared_token_file
+        )
 
 @pytest.fixture(scope='session')
 def api_client(token_manager):
