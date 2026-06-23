@@ -6,7 +6,7 @@ class BaseAPI(object):
         self.client = client
 
     def _request(self, method, path, need_encrypt: bool = True, need_sign: bool = True, need_token: bool = True,
-                 **kwargs):
+                 need_decrypt: bool = True, **kwargs):
         """
                统一的请求入口，负责：
                1. 根据开关拼装 client 链（without_token / with_encrypt 等）
@@ -21,10 +21,8 @@ class BaseAPI(object):
         if not need_token:
             client.without_token()
 
-        resp=getattr(client, method.lower())(path, **kwargs)
-        return APIResponse.from_response(resp)
-
-
+        resp = getattr(client, method.lower())(path, **kwargs)
+        return APIResponse.from_response(resp,need_decrypt=need_decrypt)
 
     def _get(self, path, **kwargs):
         return self._request("GET", path, **kwargs)
