@@ -182,6 +182,13 @@ pip install -r requirements-dev.txt
 - flake8 —— 代码检查
 - pytest-cov —— 覆盖率
 
+
+## 未来规划
+
+- 增加Mock模块
+- 数据库连接池
+- 修改拦截器，实现“乐高式”认证链。可以解决后续新增认证测试改动多的问题。
+
 ## License
 
 MIT
