@@ -65,6 +65,9 @@ def api_user(api_client):
     return UserAPI(api_client)
 
 def pytest_sessionfinish(session):
+    # 怕买到是否为主节点，单进程 or 多进程非主节点都会存在workerinput
+    if hasattr(session.config,'workerinput'):
+        return
     if is_running_in_jenkins():
         import os
         server_sendkey = os.environ.get('server_sendkey')
