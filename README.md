@@ -1,19 +1,20 @@
 # api-automation-framework
 
-基于 **pytest + requests** 的企业级 REST API 自动化测试框架。采用四层架构设计，集成认证安全管线、多进程并发执行、数据驱动测试、Allure 报告及 Jenkins CI/CD 全流程闭环。
+基于 **pytest + requests** 的企业级 REST API 自动化测试框架。采用四层架构设计，集成认证安全管线、多进程并发执行、数据驱动测试、Allure
+报告及 Jenkins CI/CD 全流程闭环。
 
 ## 技术栈
 
-| 类别 | 技术 |
-|------|------|
-| 测试框架 | pytest 9.x |
-| HTTP 客户端 | requests |
-| 数据校验 | Pydantic v2 |
-| 测试报告 | Allure |
-| 数据驱动 | YAML + @pytest.mark.parametrize |
-| 并发执行 | pytest-xdist + filelock |
-| CI/CD | Jenkins |
-| 消息通知 | ServerChan（企微） |
+| 类别       | 技术                              |
+|----------|---------------------------------|
+| 测试框架     | pytest 9.x                      |
+| HTTP 客户端 | requests                        |
+| 数据校验     | Pydantic v2                     |
+| 测试报告     | Allure                          |
+| 数据驱动     | YAML + @pytest.mark.parametrize |
+| 并发执行     | pytest-xdist + filelock         |
+| CI/CD    | Jenkins                         |
+| 消息通知     | ServerChan（企微）                  |
 
 ## 架构
 
@@ -44,6 +45,7 @@ api/auth/               ← 认证安全层：Token / 加密 / 签名
 ## 核心特性
 
 ### 可插拔安全管线
+
 基于 `requests.auth.AuthBase` 实现请求拦截器，在请求发出前依次执行加密、签名、附加 Token。各能力支持**链式调用按需开关**：
 
 ```python
@@ -52,20 +54,24 @@ client.without_encrypt().without_sign().post("/posts", json={...})
 ```
 
 ### Token 自动管理
+
 - **主动刷新**：Token 过期前自动重新登录获取，避免请求因 Token 过期而失败
 - **Double-Checked Locking**：过期判断采用双重检查锁定模式，减少锁竞争
 
 ### 多进程并发支持
+
 - 单进程使用 `threading.Lock` 内存锁
 - 多进程（pytest-xdist）通过 `filelock` + 共享 JSON 文件实现跨进程 Token 同步
 - 文件读取失败自动重试，保障高并发下数据一致性
 
 ### 数据驱动测试
+
 - YAML 文件管理测试数据
 - `@pytest.mark.parametrize` 动态注入用例
 - Pydantic v2 模型编译期校验请求/响应数据结构
 
 ### CI/CD 闭环
+
 - Jenkins 自动触发执行
 - 多进程并发回归，耗时降低 60%+
 - Allure 报告聚合
@@ -143,23 +149,13 @@ api-automation-framework/
 通过 `.env.test` 文件配置运行参数：
 
 ```ini
-BASE_URL=https://jsonplaceholder.typicode.com
-TIMEOUT=10
-LOGIN_URL=your_login_url
-USERNAME=your_username
-PASSWORD=your_password
-TOEKN_BUFFER_SECONDS=120
+BASE_URL = https://jsonplaceholder.typicode.com
+TIMEOUT = 10
+LOGIN_URL = your_login_url
+USERNAME = your_username
+PASSWORD = your_password
+TOEKN_BUFFER_SECONDS = 120
 ```
-
-## 测试覆盖
-
-| 资源 | 文件 | 用例数 | 覆盖维度 |
-|------|------|--------|----------|
-| Posts | test_posts.py | 9 | CRUD + 边界（不存在/超长） |
-| Todos | test_todos.py | 7 | CRUD + 数据驱动参数化 |
-| Users | test_users.py | 9 | CRUD + Pydantic 校验 + 参数化 |
-
-覆盖 HTTP 方法：**GET / POST / PUT / PATCH / DELETE**
 
 ## CI/CD
 
@@ -181,7 +177,6 @@ pip install -r requirements-dev.txt
 - black —— 代码格式化
 - flake8 —— 代码检查
 - pytest-cov —— 覆盖率
-
 
 ## 未来规划
 
