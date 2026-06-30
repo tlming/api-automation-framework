@@ -1,7 +1,8 @@
 # 测试报告与日志（本地生成，无需上传）
 logs/
 reports/
-
+#本地文档记录
+x.txt
 #claude (claude code产物，无需上传)
 .claude
 # Byte-compiled / optimized / DLL files
